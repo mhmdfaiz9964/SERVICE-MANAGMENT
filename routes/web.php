@@ -11,38 +11,59 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AppSettingController;
 use Illuminate\Support\Facades\Auth;
 
-// Authentication routes
-Auth::routes();
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
 
-// Protected routes (require authentication)
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+*/
+Auth::routes(); // /login, /register, /logout, /password/reset, etc.
+
+/*
+|--------------------------------------------------------------------------
+| Protected Routes (require authentication)
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth:web'])->group(function () {
-    // Admin routes prefix
-    Route::prefix('admin')->name('admin.')->group(function () {
-        
-        // Dashboard routes
-        Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-        Route::get('/', fn() => view('admin.dashboard'));
-
-        // User management
-        Route::resource('users', UserController::class);
-
-        // Service management
-        Route::resource('service-categories', ServiceCategoryController::class)->names('service.categories');
-        Route::get('service/categories/toggle/{id}', [ServiceCategoryController::class, 'toggleStatus'])
-            ->name('service.categories.toggle');
-        
-        Route::resource('services', ServiceController::class)->names('services');
-
-        // Technician management
-        Route::resource('technician', TechnicianController::class)->names('technician');
-        Route::post('/technicians/{id}/toggle-status', [TechnicianController::class, 'toggleStatus'])
-            ->name('technician.toggle-status');
-
-        // Customer management
-        Route::resource('customer', CustomerController::class)->names('customer');
-
-        // App settings
-        Route::get('app-settings', [AppSettingController::class, 'index'])->name('app_settings');
-        Route::put('app-settings/update', [AppSettingController::class, 'update'])->name('app_settings.update');
+    Route::get('/', function () {
+        return redirect()->route('admin.dashboard');
     });
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Routes (prefix /admin)
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('admin')
+        ->name('admin.')
+        ->group(function () {
+            // Dashboard
+            Route::get('/', [HomeController::class, 'index'])->name('dashboard');
+            Route::get('/dashboard', [HomeController::class, 'index']);
+
+            // User management
+            Route::resource('users', UserController::class);
+
+            // Service Categories
+            Route::resource('service-categories', ServiceCategoryController::class)->names('service.categories');
+            Route::get('service/categories/toggle/{id}', [ServiceCategoryController::class, 'toggleStatus'])->name('service.categories.toggle');
+
+            // Services
+            Route::resource('services', ServiceController::class)->names('services');
+
+            // Technicians
+            Route::resource('technicians', TechnicianController::class)->names('technician');
+            Route::post('/technicians/{id}/toggle-status', [TechnicianController::class, 'toggleStatus'])->name('technician.toggle-status');
+
+            // Customers
+            Route::resource('customers', CustomerController::class)->names('customer');
+
+            // App Settings
+            Route::get('app-settings', [AppSettingController::class, 'index'])->name('app_settings');
+            Route::put('app-settings/update', [AppSettingController::class, 'update'])->name('app_settings.update');
+        });
 });

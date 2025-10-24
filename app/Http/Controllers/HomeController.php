@@ -8,21 +8,30 @@ class HomeController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @return void
+     * Apply auth middleware so only logged-in users can access.
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth'); // redirects to login if not logged in
     }
 
     /**
-     * Show the application dashboard.
+     * Show the admin dashboard after login.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        return view('admin.dashboard');
+        return view('admin.dashboard'); // your admin dashboard blade
+    }
+
+    /**
+     * Redirect user after login.
+     *
+     * You can define this in LoginController or here using a redirect.
+     */
+    public function redirectToDashboard()
+    {
+        return redirect()->route('admin.dashboard'); // redirect to /admin
     }
 }
