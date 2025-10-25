@@ -31,7 +31,7 @@ Auth::routes(); // /login, /register, /logout, /password/reset, etc.
 */
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/', function () {
-        return redirect()->route('index');
+        return redirect()->route('/admin');
     });
     /*
     |--------------------------------------------------------------------------
