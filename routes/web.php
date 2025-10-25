@@ -30,9 +30,9 @@ Auth::routes(); // /login, /register, /logout, /password/reset, etc.
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:web'])->group(function () {
-    Route::get('/', function () {
-        return redirect()->route('/admin');
-    });
+Route::get('/', function () {
+    return redirect()->route('admin.dashboard');
+});
     /*
     |--------------------------------------------------------------------------
     | Admin Routes (prefix /admin)
